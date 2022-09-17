@@ -25,7 +25,12 @@ export class WorkspacesController {
 
     @Delete('url/members/:id')
     kickMemberFromWorkspace(){
-        
+
+    }
+
+    @Get('url/users/:id')
+    getMemberInfoInWorkspace() {
+
     }
 
 }
