@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Post, Req, Res, } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UseInterceptors, } from '@nestjs/common';
 import { ApiBadGatewayResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/common/decorators/user.decorator';
 import { UserDto } from 'src/common/dto/user.dto';
+import { UndefinedTonullInterceptor } from 'src/common/interceptors/undefinedTonull.interceptor';
 import { JoinRequestDto } from './dto/join.request.dto';
 import { UsersService } from './users.service';
 
+@UseInterceptors(UndefinedTonullInterceptor) //컨트롤러 전체에 undefined가 들어오면 null로 변환
 @ApiTags('USERS')
 @Controller('api/users')
 export class UsersController {
