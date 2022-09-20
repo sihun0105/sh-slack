@@ -7,6 +7,7 @@ import { ChannelsModule } from './channels/channels.module';
 import { DmsModule } from './dms/dms.module';
 import { WorkspacesModule } from './workspaces/workspaces.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import * as ormconfig from '../ormconfig';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -16,7 +17,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     ChannelsModule,
     DmsModule,
     WorkspacesModule,
-    TypeOrmModule
+    TypeOrmModule.forRoot(ormconfig) 
   ],
   controllers: [AppController],
   providers: [AppService,ConfigService],
