@@ -5,17 +5,30 @@ import { Repository } from 'typeorm';
 import bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
-  // constructor(
-  //   @InjectRepository(Users)
-  //   private usersRepository: Repository<Users>,
-  // ) {}
+  constructor(
+    @InjectRepository(Users)
+    private usersRepository: Repository<Users>,
+  ) {}
 
-  postUsers(email: string, nickname: string, password: string) {}
-  // async postUsers(email: string, nickname: string, password: string) {
-  //   const user = await this.usersRepository.findOne({ where: { email } });
-  //   if (user) {
-  //     return;
-  //   }
-  //   const hashPassword = await bcrypt.hash(password, 12);
-  // }
+  async postUsers(email: string, nickname: string, password: string) {
+    if (!email) {
+      return;
+    }
+    if (!nickname) {
+      return;
+    }
+    if (!password) {
+      return;
+    }
+    const user = await this.usersRepository.findOne({ where: { email } });
+    if (user) {
+      return;
+    }
+    const hashPassword = await bcrypt.hash(password, 12);
+    await this.usersRepository.save({
+      email,
+      nickname,
+      password: hashPassword,
+    });
+  }
 }
