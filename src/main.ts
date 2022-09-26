@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './http-exception.filter';
-
+import passport from 'passport';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = process.env.PORT || 3000;
@@ -17,8 +17,9 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-
-  console.log(`listen on port ${port}`);
+  app.use(passport.initialize());
+  app.use(passport.session());
   await app.listen(port);
+  console.log(`listen on port ${port}`);
 }
 bootstrap();

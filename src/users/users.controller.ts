@@ -20,6 +20,7 @@ import { UserDto } from 'src/common/dto/user.dto';
 import { UndefinedTonullInterceptor } from 'src/common/interceptors/undefinedTonull.interceptor';
 import { JoinRequestDto } from './dto/join.request.dto';
 import { UsersService } from './users.service';
+import { LocalAuthGuard } from 'src/auth/local-auth-guard';
 
 @UseInterceptors(UndefinedTonullInterceptor) //컨트롤러 전체에 undefined가 들어오면 null로 변환
 @ApiTags('USERS')
