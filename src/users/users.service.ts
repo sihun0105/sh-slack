@@ -13,8 +13,7 @@ export class UsersService {
   async join(email: string, nickname: string, password: string) {
     const user = await this.usersRepository.findOne({ where: { email } });
     if (user) {
-      // 유저 정보가 있다면?
-      throw new ForbiddenException('이미 존재하는 사용자입니다.');
+      throw new ForbiddenException('이미 존재하는 사용자입니다.'); // 유저 정보가 있다면?
     }
     const hashPassword = await bcrypt.hash(password, 12); // 없다면 비밀번호 암호화
     await this.usersRepository.save({
