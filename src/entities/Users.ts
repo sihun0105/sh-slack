@@ -18,34 +18,39 @@ import { DMs } from './DMs';
 import { Mentions } from './Mentions';
 import { WorkspaceMembers } from './WorkspaceMembers';
 import { Workspaces } from './Workspaces';
-
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 @Index('email', ['email'], { unique: true })
 @Entity({ schema: 'sleact', name: 'users' })
 export class Users {
   @ApiProperty({
-    example : '1',
-    description : '사용자 아이디'
+    example: '1',
+    description: '사용자 아이디',
   })
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
-  
+
+  @IsEmail()
   @ApiProperty({
-    example : 'tlgns14@nate.com',
-    description : '사용자 이메일'
+    example: 'tlgns14@nate.com',
+    description: '사용자 이메일',
   })
   @Column('varchar', { name: 'email', unique: true, length: 30 })
   email: string;
 
+  @IsString()
+  @IsNotEmpty()
   @ApiProperty({
-    example : '김시후니후니',
-    description : '사용자 닉네임'
+    example: '김시후니후니',
+    description: '사용자 닉네임',
   })
   @Column('varchar', { name: 'nickname', length: 30 })
   nickname: string;
 
+  @IsString()
+  @IsNotEmpty()
   @ApiProperty({
-    example : '1q2w3e4r',
-    description : '사용자 비밀번호'
+    example: '1q2w3e4r',
+    description: '사용자 비밀번호',
   })
   @Column('varchar', { name: 'password', length: 100, select: false })
   password: string;
