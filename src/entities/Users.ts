@@ -52,7 +52,7 @@ export class Users {
     example: '1q2w3e4r',
     description: '사용자 비밀번호',
   })
-  @Column('varchar', { name: 'password', length: 100, select: false })
+  @Column('varchar', { name: 'password', length: 100, select: true })
   password: string;
 
   @CreateDateColumn()
