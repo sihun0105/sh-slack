@@ -21,6 +21,8 @@ import { UndefinedTonullInterceptor } from 'src/common/interceptors/undefinedTon
 import { JoinRequestDto } from './dto/join.request.dto';
 import { UsersService } from './users.service';
 import { LocalAuthGuard } from 'src/auth/local-auth-guard';
+import { LoggedInGuard } from 'src/auth/logged-in-guard';
+import { NotLoggedInGuard } from 'src/auth/not-logged-in-guard';
 
 @UseInterceptors(UndefinedTonullInterceptor) //컨트롤러 전체에 undefined가 들어오면 null로 변환
 @ApiTags('USERS')
@@ -34,9 +36,9 @@ export class UsersController {
   @ApiOperation({ summary: '내 정보 조회' })
   @Get()
   getUers(@User() user) {
-    return user;
+    return user || false;
   }
-
+  @UseGuards(new NotLoggedInGuard())
   @ApiOperation({ summary: '회원가입' })
   @Post()
   async join(@Body() body: JoinRequestDto) {
@@ -51,13 +53,14 @@ export class UsersController {
     description: '서버 에러',
   })
   @ApiOperation({ summary: '로그인' })
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(new LocalAuthGuard())
   @Post('login')
   logIn(@User() user) {
     return user;
   }
 
   @ApiOperation({ summary: '로그아웃' })
+  @UseGuards(new LoggedInGuard())
   @Post('logout')
   logOut(@Req() req, @Res() res) {
     req.logout();
