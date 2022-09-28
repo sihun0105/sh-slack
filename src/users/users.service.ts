@@ -15,12 +15,12 @@ export class UsersService {
     if (user) {
       throw new ForbiddenException('이미 존재하는 사용자입니다.'); // 유저 정보가 있다면?
     }
-    const hashPassword = await bcrypt.hash(password, 12); // 없다면 비밀번호 암호화
+    const hashedPassword = await bcrypt.hash(password, 12); // 없다면 비밀번호 암호화
     await this.usersRepository.save({
       // 테이블에 추가
       email,
       nickname,
-      password: hashPassword,
+      password: hashedPassword,
     });
   }
 }
