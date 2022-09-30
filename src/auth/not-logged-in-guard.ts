@@ -7,6 +7,6 @@ export class NotLoggedInGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    return !request.isAuthenticated;
+    return !request.isAuthenticated();
   }
 }

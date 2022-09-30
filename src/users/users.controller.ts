@@ -29,7 +29,6 @@ import { NotLoggedInGuard } from 'src/auth/not-logged-in-guard';
 @Controller('api/users')
 export class UsersController {
   constructor(private userService: UsersService) {}
-
   @ApiResponse({
     type: UserDto,
   })
@@ -38,9 +37,10 @@ export class UsersController {
   getUers(@User() user) {
     return user || false;
   }
-  @UseGuards(new NotLoggedInGuard())
+
   @ApiOperation({ summary: '회원가입' })
-  @Post()
+  @UseGuards(NotLoggedInGuard)
+  @Post('join')
   async join(@Body() body: JoinRequestDto) {
     await this.userService.join(body.email, body.nickname, body.password);
   }
@@ -53,14 +53,14 @@ export class UsersController {
     description: '서버 에러',
   })
   @ApiOperation({ summary: '로그인' })
-  @UseGuards(new LocalAuthGuard())
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   logIn(@User() user) {
     return user;
   }
 
   @ApiOperation({ summary: '로그아웃' })
-  @UseGuards(new LoggedInGuard())
+  @UseGuards(LoggedInGuard)
   @Post('logout')
   logOut(@Req() req, @Res() res) {
     req.logout();
