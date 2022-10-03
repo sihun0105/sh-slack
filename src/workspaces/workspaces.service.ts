@@ -39,7 +39,6 @@ export class WorkspacesService {
     workspace.url = url;
     workspace.OwnerId = myId;
     const returned = await this.workspaceRepository.save(workspace);
-
     const workspacemember = new WorkspaceMembers();
     workspacemember.UserId = myId;
     workspacemember.WorkspaceId = returned.id;
@@ -52,5 +51,47 @@ export class WorkspacesService {
     channelMember.UserId = myId;
     channelMember.ChannelId = channelReturned.id;
     await this.channelMemberRepository.save(channelMember);
+  }
+  async getWorkspaceMembers(url: string) {
+    this.UsersRepository.createQueryBuilder('user')
+      .innerJoin('user.WorkspaceMembers', 'members')
+      .innerJoin('members.Workspace', 'workspace', 'workspace.url = :url', {
+        url,
+      })
+      .getMany();
+  }
+
+  async createWorkspaceMembers(url, email) {
+    const workspace = await this.workspaceRepository.findOne({
+      where: { url },
+      join: {
+        alias: 'workspace',
+        innerJoinAndSelect: {
+          channels: 'workspace,Channels',
+        },
+      },
+    });
+    const user = await this.UsersRepository.findOne({ where: { email } });
+    if (!user) {
+      return null;
+    }
+    const workspaceMember = new WorkspaceMembers();
+    workspaceMember.WorkspaceId = workspace.id;
+    workspaceMember.UserId = user.id;
+    await this.workspaceMemberRepository.save(workspaceMember);
+    const channelMember = new ChannelMembers();
+    channelMember.ChannelId = workspace.Channels.find(
+      (v) => v.name === '일반',
+    ).id;
+    channelMember.UserId = user.id;
+    await this.channelMemberRepository.save(channelMember);
+  }
+  async getWorkspaceMember(url: string, id: number) {
+    return this.UsersRepository.createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .innerJoin('user.Workspaces', 'workspaces', 'workspaces.url = :url', {
+        url,
+      })
+      .getOne();
   }
 }
