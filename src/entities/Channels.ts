@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -21,6 +23,12 @@ export class Channels {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({
+    description: '메시지 내용',
+    example: 'ㅎㅇ',
+  })
   @Column('varchar', { name: 'name', length: 30 })
   name: string;
 

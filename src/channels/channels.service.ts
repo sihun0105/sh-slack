@@ -143,6 +143,9 @@ export class ChannelsService {
       })
       .where('channel.name = :name', { name })
       .getOne();
+    if (!channel) {
+      throw new NotFoundException('채널이 존재하지 않습니다.');
+    }
     const chats = new ChannelChats();
     chats.content = content;
     chats.UserId = myId;

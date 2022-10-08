@@ -11,10 +11,17 @@ import * as ormconfig from '../ormconfig';
 import { Users } from './entities/Users';
 import { MorganModule } from 'nest-morgan';
 import { AuthModule } from './auth/auth.module';
+import { EventsModule } from './events/events.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client'),
     }),
     AuthModule,
     UsersModule,
@@ -24,6 +31,7 @@ import { AuthModule } from './auth/auth.module';
     TypeOrmModule.forRoot(ormconfig),
     TypeOrmModule.forFeature([Users]),
     MorganModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService],

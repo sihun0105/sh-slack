@@ -7,11 +7,27 @@ import passport from 'passport';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import path from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
+  if (process.env.NODE_ENV === 'product') {
+    app.enableCors({
+      origin: ['https://shslack.com'],
+      credentials: true,
+    });
+  } else {
+    app.enableCors({
+      origin: true,
+      credentials: true,
+    });
+  }
+  app.useStaticAssets(path.join(__dirname, '..', 'uploads'), {
+    prefix: '/uploads',
+  });
   app.use(morgan('dev'));
   const config = new DocumentBuilder()
     .setTitle('Sleact API')

@@ -1,10 +1,10 @@
 import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from 'src/entities/Users';
+import { Users } from '../entities/Users';
 import { Repository, DataSource } from 'typeorm';
 import bcrypt from 'bcrypt';
-import { WorkspaceMembers } from 'src/entities/WorkspaceMembers';
-import { ChannelMembers } from 'src/entities/ChannelMembers';
+import { WorkspaceMembers } from '../entities/WorkspaceMembers';
+import { ChannelMembers } from '../entities/ChannelMembers';
 @Injectable()
 export class UsersService {
   constructor(
@@ -17,6 +17,12 @@ export class UsersService {
     private dataSource: DataSource,
   ) {}
 
+  async findByEmail(email: string) {
+    return this.usersRepository.findOne({
+      where: { email },
+      select: ['id', 'email', 'password'],
+    });
+  }
   async join(email: string, nickname: string, password: string) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
